@@ -16,6 +16,16 @@ Depois de clonar esse repositório, rode o comando abaixo para instalar todas as
 yarn install
 ```
 
+## Banco de Dados
+
+Essa API está rodando com Sqlite3 e Knex.
+
+Rode o comando abaixo para executar as migrations:
+
+```sh
+knex:migrate
+```
+
 ## Sobre variáveis de ambiente.
 
 O Mailtrap para funcionar precisa de um usuário e senha específicos para sua conta. Para esconder esses dados, essa API usa variávis de ambiente.
