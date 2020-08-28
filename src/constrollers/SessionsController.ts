@@ -11,23 +11,23 @@ export default class SessionsController {
     async create(request: Request, response: Response) {
         const { email, password } = request.body;
 
-        const [user] = await db('users').where('email', email).select('id', 'password');
-
-        if (!user) {
-            return response.status(400).json({
-                error: 'Incorrect email/password combination.'
-            });
-        }
-
-        const passwordMatched = await compare(password, user.password);
-
-        if (!passwordMatched) {
-            return response.status(400).json({
-                error: 'Incorrect email/password combination.'
-            });
-        }
-
         try {
+            const [user] = await db('users').where('email', email).select('*');
+
+            if (!user) {
+                return response.status(400).json({
+                    error: 'Incorrect email/password combination.'
+                });
+            }
+
+            const passwordMatched = await compare(password, user.password);
+
+            if (!passwordMatched) {
+                return response.status(400).json({
+                    error: 'Incorrect email/password combination.'
+                });
+            }
+            
             const { secret, expiresIn } = authConfig.jwt;
 
             const token = sign({}, secret, {

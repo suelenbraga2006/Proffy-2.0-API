@@ -18,29 +18,29 @@ export default class UsersController {
             bio,
         } = request.body;
 
-        const [id] = await db('users').where('email', email).select('id');
-
-        if (id) {
-            return response.status(400).json({
-                error: 'This email already exists.'
-            });
-        }
-
-        const hashedPassword = await hash(password, 8);
-
         try {
-           const [id] = await db('users').insert({
-            id: uuid(),
-            name,
-            lastname,
-            email,
-            password: hashedPassword,
-            avatar: avatar ? avatar : 'avatar-default.svg',
-            whatsapp,
-            bio,
-           }); 
+            const [user_id] = await db('users').where('email', email).select('id');
 
-           return response.status(201).json({id});
+            if (user_id) {
+                return response.status(400).json({
+                    error: 'This email already exists.'
+                });
+            }
+
+            const hashedPassword = await hash(password, 8);
+
+            const [id] = await db('users').insert({
+                id: uuid(),
+                name,
+                lastname,
+                email,
+                password: hashedPassword,
+                avatar: avatar ? avatar : 'https://images.freeimages.com/images/large-previews/023/geek-avatar-1632962.jpg',
+                whatsapp,
+                bio,
+            }); 
+
+            return response.status(201).json({id});
         } catch(err) {
             return response.status(400).json({
                 error: 'Unexpected error while creating a new user'
